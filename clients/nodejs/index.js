@@ -29,15 +29,11 @@ if (argv['log-tag']) {
 
 console.log(`Nimiq NodeJS Client starting (host=${host}, port=${port}, miner=${!!minerOptions}, passive=${!!passive})`);
 
-// XXX Configure Core.
-// TODO Create config/options object and pass to Core.get()/init().
-Nimiq.NetworkConfig.configurePeerAddress(host, port);
-Nimiq.NetworkConfig.configureSSL(key, cert);
-
 const TAG = 'Node';
 
 (async () => {
-    const consensus = await Nimiq.Consensus.full();
+    const netconfig = new Nimiq.NetworkConfig(host, port, key, cert);
+    const consensus = await Nimiq.Consensus.full(netconfig);
 
     const blockchain = consensus.blockchain;
     const mempool = consensus.mempool;
